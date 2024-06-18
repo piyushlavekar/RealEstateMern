@@ -5,4 +5,4 @@ client/node_modules/
 # Ignore .env files
 api/.env
 client/.env
-git remote add origin https://github.com/piyushlavekar/RealEstateMern.git
+
