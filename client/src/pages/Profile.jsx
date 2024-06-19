@@ -18,6 +18,7 @@ import {
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../config';
 export default function Profile() {
   const fileRef = useRef(null);
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -30,11 +31,6 @@ export default function Profile() {
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
-  // firebase storage
-  // allow read;
-  // allow write: if
-  // request.resource.size < 2 * 1024 * 1024 &&
-  // request.resource.contentType.matches('image/.*')
 
   useEffect(() => {
     if (file) {
@@ -70,34 +66,6 @@ export default function Profile() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     dispatch(updateUserStart());
-  //     const res = await fetch(`/api/user/update/${currentUser._id}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-  //     const data = await res.json();
-  //     if (data.success === false) {
-  //       dispatch(updateUserFailure(data.message));
-  //       return;
-  //     }
-
-  //     dispatch(updateUserSuccess(data));
-  //     setUpdateSuccess(true);
-  //   } catch (error) {
-  //     dispatch(updateUserFailure(error.message));
-  //   }
-  // };
-
-  // Inside the handleSubmit function
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -143,7 +111,7 @@ const handleSubmit = async (e) => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('/api/auth/signout');
+      const res = await fetch(`/api/auth/signout`);
       const data = await res.json();
       if (data.success === false) {
         dispatch(deleteUserFailure(data.message));

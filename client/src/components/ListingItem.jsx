@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MdLocationOn } from 'react-icons/md';
+import { API_BASE_URL } from '../config';
 
 export default function ListingItem({ listing }) {
   return (

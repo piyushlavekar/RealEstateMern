@@ -5,6 +5,7 @@ import './index.css';
 import { persistor, store } from './redux/store.js';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { API_BASE_URL } from './config';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
