@@ -8,12 +8,14 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Get __filename and __dirname to use with ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Connect to MongoDB
+// Connect to MongoDB using the connection string from .env
 mongoose.connect(process.env.MONGO, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -26,20 +28,20 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000!');
-});
-
+// Define routes for the API
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/listing', listingRouter);
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
+// Serve static files from the client/dist directory
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
+// For all other routes, serve the index.html file from the client build
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
@@ -50,15 +52,24 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Replace collection.ensureIndex with createIndexes
+// Ensure indexes are created using the correct method
 mongoose.connection.on('connected', () => {
   mongoose.connection.db.collection('your_collection', (err, collection) => {
-    collection.createIndexes([{ key: { key: 1 }, unique: true }], (err, result) => {
-      if (err) {
-        console.error('Error creating indexes:', err.message);
-      } else {
-        console.log('Indexes created!');
-      }
-    });
+    if (err) {
+      console.error('Error accessing collection:', err.message);
+    } else {
+      collection.createIndexes([{ key: { key: 1 }, unique: true }], (err, result) => {
+        if (err) {
+          console.error('Error creating indexes:', err.message);
+        } else {
+          console.log('Indexes created!');
+        }
+      });
+    }
   });
+});
+
+// Start the server
+app.listen(3000, () => {
+  console.log('Server is running on port 3000!');
 });
